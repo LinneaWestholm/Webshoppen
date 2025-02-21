@@ -14,25 +14,22 @@ namespace Webshop
 {
     internal class Admin
     {
-
-        public static List<Customer> customers = new List<Customer>(); // Holds customer data in memory
         public static void AdminPage()
         {
-            Console.Clear();
-            List<string> adminMenu = new List<string> { "1. Lägg till ny produkt", "2. Uppdatera produkt", "3. Ta bort produkt", "4. Lägg till ny kategori", "5. Uppdatera kategori", "6. Ta bort kategori"};
-            var adminWindow = new Window("Admin", 2, 1, adminMenu);
-            adminWindow.Draw();
-            List<string> exit = new List<string> { "Avsluta [x]" };
-            var adminWindow1 = new Window("", 4, 4,exit);
-          
-            Console.Write("Välj mellan 1-9, [x] för att avsluta: ");
-            var choice = Console.ReadKey().KeyChar;
+            bool isRunning = true;
 
-            Console.WriteLine();
-       
-
-            while (true)
+            while (isRunning)
             {
+                List<string> adminMenu = new List<string> { "1. Lägg till ny produkt", "2. Uppdatera produkt", "3. Ta bort produkt", "4. Lägg till ny kategori", "5. Uppdatera kategori", "6. Ta bort kategori"};
+                var adminWindow = new Window("Admin", 2, 1, adminMenu);
+                adminWindow.Draw();
+                List<string> exit = new List<string> { "Avsluta [x]" };
+                var adminWindow1 = new Window("", 4, 4, exit);
+
+                Console.Write("Välj mellan 1-6, [x] för att avsluta: ");
+                var choice = Console.ReadKey().KeyChar;
+                Console.WriteLine();
+
                 switch (choice)
                 {
                     case '1':
@@ -53,8 +50,8 @@ namespace Webshop
                     case '6':
                         RemoveCategory();
                         break;
-    
                     case 'x':
+                        isRunning = false;
                         Console.WriteLine("..Hejdå!");
                         return;
                     default:
@@ -75,7 +72,8 @@ namespace Webshop
 
         public static void AddNewProduct()
         {
-            while (true)
+            bool goBack = false;
+            while (!goBack)
             {
                 using (var myDb = new MyDbContext())
                 {
@@ -121,14 +119,17 @@ namespace Webshop
 
                     Console.WriteLine("Ny produkt har lagts till.");
                 }
-             
+                Console.ReadLine();
+                Console.Clear();
+                goBack = true;
 
             }
         }
 
         public static void UpdateProduct()
         {
-            while (true)
+            bool goBack = false;
+            while (!goBack)
             {
                 using (var myDb = new MyDbContext())
                 {
@@ -191,9 +192,10 @@ namespace Webshop
                     }
                 }
                 Console.WriteLine("Tryck på valfri tagnent för att gå tillbaka");
-                Console.ReadKey();
+                Console.ReadLine();
                 Console.Clear();
-                AdminPage();
+                goBack = true;
+                
             }
 
             
@@ -202,7 +204,8 @@ namespace Webshop
 
         public static void RemoveProduct()
         {
-            while (true)
+            bool goBack = false;
+            while (!goBack)
             {
                 using (var myDb = new MyDbContext())
                 {
@@ -232,113 +235,132 @@ namespace Webshop
                         Console.WriteLine("Produkten hittades inte");
                     }
                 }
-                Console.ReadKey();
+                Console.ReadLine();
                 Console.Clear();
+                goBack = true;
+
             }
 
         }
 
         public static void AddNewCategory()
         {
-            using (var myDb = new MyDbContext())
+            bool goBack = false;
+            while (!goBack)
             {
-                var categories = myDb.Categories.ToList();
-
-                Console.WriteLine("----------------------");
-                Console.WriteLine("Lägg till ny kategori");
-                Console.WriteLine("----------------------");
-
-
-                foreach (var category in categories)
+                using (var myDb = new MyDbContext())
                 {
-                    Console.WriteLine(category.Name);
+                    var categories = myDb.Categories.ToList();
 
+                    Console.WriteLine("----------------------");
+                    Console.WriteLine("Lägg till ny kategori");
+                    Console.WriteLine("----------------------");
+
+
+                    foreach (var category in categories)
+                    {
+                        Console.WriteLine(category.Name);
+
+                    }
+
+                    Console.Write("Ange kategorinamn: ");
+                    var categoryName = Console.ReadLine();
+
+                    var newCategory = new Category
+                    {
+                        Name = categoryName
+                    };
+                    myDb.Add(newCategory);
+                    myDb.SaveChanges();
                 }
-
-                Console.Write("Ange kategorinamn: ");
-                var categoryName = Console.ReadLine();
-
-                var newCategory = new Category
-                {
-                    Name = categoryName
-                };
-                myDb.Add(newCategory);
-                myDb.SaveChanges();
+                Console.ReadLine();
+                Console.Clear();
+                goBack = true;
             }
-            Console.ReadKey();
         }
 
 
         public static void UpdateCategory()
         {
-            using (var myDb = new MyDbContext())
+            bool goBack = false;
+            while (!goBack)
             {
-
-                var categories = myDb.Categories;
-                Console.WriteLine("------------------");
-                Console.WriteLine("Uppdatera kategori");
-                Console.WriteLine("------------------");
-                foreach (var category in categories)
+                using (var myDb = new MyDbContext())
                 {
-                    Console.WriteLine(category.Id + "." + category.Name);
-                }
-                Console.Write("Ange kategori id: ");
-                var categoryId = int.Parse(Console.ReadLine());
 
-
-                var updateCategory = categories.Where(c => c.Id == categoryId).FirstOrDefault();
-
-                if (updateCategory != null)
-                {
+                    var categories = myDb.Categories;
+                    Console.WriteLine("------------------");
+                    Console.WriteLine("Uppdatera kategori");
+                    Console.WriteLine("------------------");
+                    foreach (var category in categories)
                     {
-                        Console.WriteLine("Ange nytt namn på kategori(om det inte ska ändras - lämna tomt): ");
-                        var newName = Console.ReadLine();
-                        if (!string.IsNullOrWhiteSpace(newName))
+                        Console.WriteLine(category.Id + "." + category.Name);
+                    }
+                    Console.Write("Ange kategori id: ");
+                    var categoryId = int.Parse(Console.ReadLine());
+
+
+                    var updateCategory = categories.Where(c => c.Id == categoryId).FirstOrDefault();
+
+                    if (updateCategory != null)
+                    {
                         {
-                            updateCategory.Name = newName;
+                            Console.WriteLine("Ange nytt namn på kategori(om det inte ska ändras - lämna tomt): ");
+                            var newName = Console.ReadLine();
+                            if (!string.IsNullOrWhiteSpace(newName))
+                            {
+                                updateCategory.Name = newName;
+                            }
+                            myDb.SaveChanges();
+                            Console.WriteLine("Kategori är uppdaterad..");
                         }
-                        myDb.SaveChanges();
-                        Console.WriteLine("Kategori är uppdaterad..");
                     }
                 }
+                Console.ReadLine();
+                Console.Clear();
+                goBack = true;
             }
-            Console.ReadKey();
-           
         }
 
         public static void RemoveCategory()
         {
-            using (var myDb = new MyDbContext())
+            bool goBack = false;
+            while (!goBack)
             {
-
-                var categories = myDb.Categories;
-
-                Console.WriteLine("----------------");
-                Console.WriteLine("Ta bort kategori");
-                Console.WriteLine("-----------------");
-                foreach (var category in categories)
+                using (var myDb = new MyDbContext())
                 {
-                    Console.WriteLine(category.Id + "." + category.Name);
+
+                    var categories = myDb.Categories;
+
+                    Console.WriteLine("----------------");
+                    Console.WriteLine("Ta bort kategori");
+                    Console.WriteLine("-----------------");
+                    foreach (var category in categories)
+                    {
+                        Console.WriteLine(category.Id + "." + category.Name);
+                    }
+                    Console.WriteLine("Ange kategori id: ");
+                    int categoryId = int.Parse(Console.ReadLine());
+
+                    var removeCategory = categories.Where(c => c.Id == categoryId).FirstOrDefault();
+                    if (removeCategory != null)
+                    {
+                        categories.Remove(removeCategory);
+                        myDb.SaveChanges();
+                        Console.WriteLine("Kategori är borttagen..");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Kategori hittades inte..");
+                    }
+
+
+
                 }
-                Console.WriteLine("Ange kategori id: ");
-                int categoryId = int.Parse(Console.ReadLine());
-
-                var removeCategory = categories.Where(c => c.Id == categoryId).FirstOrDefault();
-                if (removeCategory != null)
-                {
-                    categories.Remove(removeCategory);
-                    myDb.SaveChanges();
-                    Console.WriteLine("Kategori är borttagen..");
-                }
-                else
-                {
-                    Console.WriteLine("Kategori hittades inte..");
-                }
-
-
-
             }
-            Console.ReadKey();
+            Console.ReadLine();
+            Console.Clear();
+            goBack = true;
 
 
         }
