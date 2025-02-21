@@ -76,7 +76,7 @@ namespace Webshop
                     Console.WriteLine("Utvalda produkter");
                     Console.WriteLine("----------------------------");
 
-
+                    // Visar utvalda produkter (ShowOnFrontPage)
                     foreach (var product in frontPageProducts)
                     {
                         Console.WriteLine($"{product.Name}");
@@ -86,14 +86,14 @@ namespace Webshop
                         Console.WriteLine($"Tryck {product.Id} för att köpa");
                         Console.WriteLine("----------------------------");
                     } 
-                    Console.Write("Ange vald product: ");
+                    Console.Write("Ange vald product: ");   // Välj utvald produkt via product.Id
                     var productId = int.Parse(Console.ReadLine());
 
                     var selectedProduct = myDb.Products.Where(p => p.Id == productId).FirstOrDefault();
 
                     if (selectedProduct != null)
                     {
-                        Console.Write("Mata in ditt ID: ");
+                        Console.Write("Mata in ditt ID: "); // Mata in ShoppingCartId
                         var cartId = int.Parse(Console.ReadLine());
 
                         var cart = myDb.ShoppingCarts
@@ -102,6 +102,7 @@ namespace Webshop
 
                         if(cart != null)
                         {
+                            // Lägger till utvald produkt i vald varukorg
                             cart.Products.Add(selectedProduct);
                             myDb.SaveChanges();
                             Console.WriteLine("Vald produkt las till i varukorgen");
@@ -144,16 +145,16 @@ namespace Webshop
                     Console.WriteLine("Kategorier");
                     Console.WriteLine($"---------------------------------------------");
 
-                    foreach (var category in categories)
+                    foreach (var category in categories)         // Skriver ut kategorier
                     {
                         Console.WriteLine(category.Id + "." + category.Name);
                     }
-                    Console.Write("Välj en kategori: ");
+                    Console.Write("Välj en kategori: ");   // Välj kategori via inmatning av Id
                     var categoryId = int.Parse(Console.ReadLine());
 
-                    var selectedCategory = categories.Where(c => c.Id == categoryId).FirstOrDefault();
+                    var selectedCategory = categories.Where(c => c.Id == categoryId).FirstOrDefault();      
 
-                    if (selectedCategory != null)
+                    if (selectedCategory != null)                      
                     {
                         // Visa produkter i vald kategori
                         var productsInCategory = myDb.Products.Where(p => p.CategoryId == selectedCategory.Id).ToList();
@@ -178,7 +179,6 @@ namespace Webshop
 
                             var selectedProduct = myDb.Products.Where(p => p.Id == productId).FirstOrDefault();
 
-                            // Produkt-selektion
                             if (selectedProduct != null)
                             {
                                 Console.WriteLine("---------------------------------------------");
@@ -194,13 +194,15 @@ namespace Webshop
                                 switch (key.KeyChar)
                                 {
                                     case '+':
-                                        Console.WriteLine("1: Ny kund? ");
-                                        Console.WriteLine("2. Redan kund?");
+                                        // Kollar om man redan är kund, annars skapas en ny kund=ny varukorg
+                                        Console.WriteLine("1: Ny kund? ");        
+                                        Console.WriteLine("2. Redan kund?");      
                                         Console.Write("Ditt val: ");
                                         var choice = Console.ReadLine();
 
                                         if(choice == "1")
                                         {
+                                            // skapar ny varukorg
                                             var newCart = new ShoppingCart();
                                             newCart.Products.Add(selectedProduct);
 
@@ -213,6 +215,7 @@ namespace Webshop
                                         }
                                         else if (choice == "2")
                                         {
+                                            // inmatning ShoppingCartId
                                             Console.Write("Mata in ditt ID: ");
                                             var cartId = int.Parse(Console.ReadLine());
 
@@ -222,6 +225,7 @@ namespace Webshop
 
                                             if(cart!= null)
                                             {
+                                                // Lägger till produkt i vald varukorg
                                                 cart.Products.Add(selectedProduct);
                                                 myDb.SaveChanges();
                                                 Console.WriteLine("Vald produkt las till i varukorgen");
@@ -234,8 +238,6 @@ namespace Webshop
                                         Console.WriteLine("Avslutar..");
                                         break;
                                 }
-                                
-
                             }
                             else
                             {
@@ -252,7 +254,6 @@ namespace Webshop
                     {
                         Console.WriteLine("Ogiltigt kategori-ID.");
                     }
-                    
                 }
                 Console.ReadLine();
                 Console.Clear();
@@ -285,13 +286,11 @@ namespace Webshop
                         {
                             Console.WriteLine($"{product.Name}, Pris: {product.Price}kr");
                         }
-
                     }
 
                     Console.ReadLine();
                     Console.WriteLine("[+] Lägg till produkt");
                     Console.WriteLine("[-] Ta bort");
-                    Console.WriteLine("[x] Check out");
                     ConsoleKeyInfo key = Console.ReadKey();
 
                     switch (key.KeyChar)
@@ -349,29 +348,7 @@ namespace Webshop
                                 {
                                     Console.WriteLine("Produkten finns inte i varukorgen");
                                 }
-
-
                             }
-                            else
-                            {
-                                Console.WriteLine("Produkten blev inte borttagen");
-                            }
-        
-                            break;
-
-
-
-                        case 'x':
-                            Console.WriteLine("============================");
-                            Console.WriteLine("======== CHECK OUT =========");
-                            Console.WriteLine("============================");
-                            Console.WriteLine();
-                            Console.WriteLine("Fyll i din information nedan");
-                            Console.Write("Namn: ");
-                            var customerName = Console.ReadLine();
-
-
-                            
                             break;
 
                         default:
