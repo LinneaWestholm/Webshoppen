@@ -16,10 +16,9 @@ namespace Webshop
 {
     internal class CustomerPage
     {
-
         public static void CustomerMenu()
         {
-
+            // KUND-SIDA
             bool isRunning = true;
 
             while (isRunning)
@@ -57,9 +56,7 @@ namespace Webshop
                         Console.WriteLine("Ogiltligt val. Välj ett nummer mellan 1-3");
                         break; 
                 }
-                
             }
-           
         }
 
         public static void ShowFrontPage()
@@ -68,7 +65,6 @@ namespace Webshop
             
             while (!goBack)
             {
-                
                 using (var myDb = new MyDbContext())
                 {
                     var frontPageProducts = myDb.Products.Where(p => p.ShowOnFrontPage == true).ToArray();
@@ -79,11 +75,7 @@ namespace Webshop
                     // Visar utvalda produkter (ShowOnFrontPage)
                     foreach (var product in frontPageProducts)
                     {
-                        Console.WriteLine($"{product.Name}");
-                        Console.WriteLine($"{product.Colour}");
-                        Console.WriteLine($"{product.Description}");
-                        Console.WriteLine($"Pris: {product.Price}kr");
-                        Console.WriteLine($"Tryck {product.Id} för att köpa");
+                        Console.WriteLine($"{product.Name}\n{product.Colour}\n{product.Description}\nPris: {product.Price}\nTryck {product.Id} för att köpa");
                         Console.WriteLine("----------------------------");
                     } 
                     Console.Write("Ange vald product: ");   // Välj utvald produkt via product.Id
@@ -111,24 +103,15 @@ namespace Webshop
                         {
                             Console.WriteLine("Ogiltligt Id");
                         }
-
-                       
                     }
                     else
-                    {
-                        
+                    { 
                         Console.WriteLine("Ogiltligt Id");
-
                     }
-                 
-
-                  
                 }
                 Console.ReadLine();
                 Console.Clear();
                 goBack = true;
-               
-                
             }
         }
 
@@ -162,7 +145,6 @@ namespace Webshop
                         Console.WriteLine("---------------------------------------------");
                         Console.WriteLine($"Produkter i kategorin: {selectedCategory.Name}");
                         Console.WriteLine("---------------------------------------------");
-
 
                         if (productsInCategory.Any())
                         {
@@ -208,7 +190,7 @@ namespace Webshop
 
                                             myDb.ShoppingCarts.Add(newCart);
                                             myDb.SaveChanges();
-                                            Console.WriteLine("Ny kund skapad...");
+                                            Console.WriteLine("Ny varukorg skapad...");
                                             Thread.Sleep(1000);
                                             Console.WriteLine("Vald produkt las till i varukorgen");
 
@@ -241,7 +223,7 @@ namespace Webshop
                             }
                             else
                             {
-                                Console.WriteLine("Ogiltligt produktval.");
+                                Console.WriteLine("Ogiltligt produkt-Id.");
                             }
 
                         }
@@ -261,7 +243,6 @@ namespace Webshop
             }
         }
 
-
         public static void ShowCart()
         {
             bool goBack = false;
@@ -270,6 +251,7 @@ namespace Webshop
             {
                 using (var myDb = new MyDbContext())
                 {
+                    // viasr varukorgen som redan finns och produkterna i den, genom att mata in ShoppingCartId
                     Console.Write("Mata in ditt ID: ");
                     var cartId = int.Parse(Console.ReadLine());
 
@@ -287,7 +269,7 @@ namespace Webshop
                             Console.WriteLine($"{product.Name}, Pris: {product.Price}kr");
                         }
                     }
-
+                    // Lägga till produkt till varukorgen eller ta bort
                     Console.ReadLine();
                     Console.WriteLine("[+] Lägg till produkt");
                     Console.WriteLine("[-] Ta bort");
@@ -311,7 +293,6 @@ namespace Webshop
                             if (selectedProduct != null)
                             {
                                 cart.Products.Add(selectedProduct);
-
                                 myDb.SaveChanges();
                                 Console.WriteLine("Vald produkt las till i varukorgen");
                             }
@@ -319,7 +300,6 @@ namespace Webshop
                             {
                                 Console.WriteLine("Ogiltligt Id");
                             }
-                           
                             break;
 
                         case '-':
@@ -354,21 +334,15 @@ namespace Webshop
                         default:
                             Console.WriteLine("Ogiltligt val.. Försök igen");
                             break;
-
-
                     }
                     Console.ReadLine();
                     Console.Clear();
                     goBack = true;
                 }
             }
-
-
-
         }
 
     }
-
 }
             
     

@@ -7,11 +7,11 @@ namespace Webshop
     {
         static void Main(string[] args)
         {
-
                 bool logIn = true;
 
                 while (logIn)
                 {
+                    // Logga in som Kund eller Admin, eller avluta programmet
                     using (var myDb = new MyDbContext())
                     {
                         Console.Clear();
@@ -29,25 +29,20 @@ namespace Webshop
 
                         if (choice == "1")
                         {
-                            CustomerPage.CustomerMenu();
+                            CustomerPage.CustomerMenu(); // VAL 1: Kund-sidan (CustomerPage)
                         }
                         else if (choice == "2")
                         {
-                            Admin.AdminPage();
+                            Admin.AdminPage();  // VAl 2: Admin-sidan (Admin)
                         }
-                        else if (choice == "x")
+                        else if (choice == "x")   // Avsluar programmet
                         {
                             Console.WriteLine("....Hejdå!");
                             logIn = false;
                         }
                     }
-
                 }
-
-
-
         }
-
 
     }
 }

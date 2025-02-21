@@ -16,6 +16,7 @@ namespace Webshop
     {
         public static void AdminPage()
         {
+            // ADMIN
             bool isRunning = true;
 
             while (isRunning)
@@ -59,15 +60,7 @@ namespace Webshop
                         break;
                 }
                 Console.ReadLine();
-               
-               
-
-
             }
-
-
-
-
         }
 
         public static void AddNewProduct()
@@ -77,17 +70,18 @@ namespace Webshop
             {
                 using (var myDb = new MyDbContext())
                 {
-                    // Lägg till produkt
+                    // Lägg till ny produkt
                     Console.WriteLine("------------------------");
                     Console.WriteLine("Lägg till ny produkt: ");
                     Console.WriteLine("------------------------");
-                    foreach (var category in myDb.Categories)
+                    foreach (var category in myDb.Categories)           // Visar kategorier
                     {
                         Console.WriteLine(category.Id + "." + category.Name);
                     }
-                    Console.WriteLine("Ange kategori id: ");
+                    Console.WriteLine("Ange kategori id: ");  // Välj vilken kategori produkten ska befinna sig i genom att mata in kategori-id
                     var productCategory = Console.ReadLine();
 
+                    // Fyll i poroduktinfo
                     Console.WriteLine("Ange namn på produkt: ");
                     var productName = Console.ReadLine();
 
@@ -105,6 +99,7 @@ namespace Webshop
 
                     bool showProductOnFrontPage = showOnFrontPage == "ja" || showOnFrontPage == "j";
 
+                    // Skapar en ny produkt och sparar den till databasen
                     var newProduct = new Product
                     {
                         CategoryId = int.Parse(productCategory),
@@ -116,13 +111,11 @@ namespace Webshop
                     };
                     myDb.Add(newProduct);
                     myDb.SaveChanges();
-
                     Console.WriteLine("Ny produkt har lagts till.");
                 }
                 Console.ReadLine();
                 Console.Clear();
                 goBack = true;
-
             }
         }
 
@@ -133,73 +126,66 @@ namespace Webshop
             {
                 using (var myDb = new MyDbContext())
                 {
-                    var productList = myDb.Products;
-
                     Console.WriteLine("-------------");
                     Console.WriteLine("Ändra produkt");
                     Console.WriteLine("--------------");
-
-                    foreach (var product in productList)
+                    foreach (var product in myDb.Products) // Visar produkter
                     {
                         Console.WriteLine(product.Id + "." + product.Name);
                     }
-                    Console.Write("Ange produkt id: ");
+                    Console.Write("Ange produkt id: "); // Ange produkt-Id på produkten som ska ändras
                     int productId = int.Parse(Console.ReadLine());
 
-                    var updateProduct = productList.Where(p => p.Id == productId).FirstOrDefault();
-
+                    var updateProduct = myDb.Products.Where(p => p.Id == productId).FirstOrDefault();
+                 
+                    // Uppdatera produkter
                     if (updateProduct != null)
                     {
-                        Console.WriteLine("Ange nytt produktnamn (om det inte ska ändras - lämna tomt): ");
+                        // Ny info läggs till, lämmna fältet tomt om man inte vill ändra
+                        Console.Write("Ange nytt produktnamn(annars-lämna tomt): ");
                         var newName = Console.ReadLine();
-                        if (!string.IsNullOrWhiteSpace(newName))
+                        if (!string.IsNullOrEmpty(newName)) 
                         {
                             updateProduct.Name = newName;
                         }
 
-                        Console.WriteLine("Ange ny färg (om det inte ska ändras - lämna tomt): ");
+                        Console.Write("Ange ny färg (annars-lämna tomt): ");
                         var newColour = Console.ReadLine();
-                        if (!string.IsNullOrWhiteSpace(newColour))
+                        if (!string.IsNullOrEmpty(newColour))
                         {
                             updateProduct.Colour = newColour;
                         }
 
-                        Console.WriteLine("Ange ny beskrivning (om det inte ska ändras - lämna tomt): ");
+                        Console.Write("Ange ny beskrivning (annars-lämna tomt): ");
                         var newDescription = Console.ReadLine();
-                        if (!string.IsNullOrWhiteSpace(newDescription))
+                        if (!string.IsNullOrEmpty(newDescription))
                         {
                             updateProduct.Description = newDescription;
                         }
 
-                        Console.WriteLine("Ange nytt produktpris (om det inte ska ändras - lämna tomt): ");
+                        Console.Write("Ange nytt produktpris (annars-lämna tomt): ");
                         var newPrice = Console.ReadLine();
-                        if (!string.IsNullOrWhiteSpace(newPrice))
+                        if (!string.IsNullOrEmpty(newPrice))
                         {
                             updateProduct.Price = double.Parse(newPrice);
                         }
 
-                        Console.WriteLine("Visa på startsida (Ja/Nej): ");
+                        Console.Write("Visa på startsida (Ja/Nej): ");
                         var showProduct = Console.ReadLine()?.ToLower();
 
-                        if (!string.IsNullOrWhiteSpace(showProduct))
+                        if (!string.IsNullOrEmpty(showProduct))
                         {
                             bool showProductOnFrontPage = showProduct == "ja" || showProduct == "j";
                             updateProduct.ShowOnFrontPage = showProductOnFrontPage;
                         }
-
                         myDb.SaveChanges();
-                        Console.WriteLine("Produkt är uppdaterad");
+                        Console.WriteLine("Produkt är uppdaterad");  // Ändringarna är sparade
                     }
                 }
-                Console.WriteLine("Tryck på valfri tagnent för att gå tillbaka");
                 Console.ReadLine();
                 Console.Clear();
                 goBack = true;
-                
             }
-
-            
-            
         }
 
         public static void RemoveProduct()
@@ -209,21 +195,19 @@ namespace Webshop
             {
                 using (var myDb = new MyDbContext())
                 {
-
-                    var productList = myDb.Products;
-
                     Console.WriteLine("--------------");
                     Console.WriteLine("Ta bort produkt");
                     Console.WriteLine("--------------");
-                    foreach (var product in productList)
+                    foreach (var product in myDb.Products) // Visar lista med produkter
                     {
                         Console.WriteLine(product.Id + "." + product.Name);
                     }
-                    Console.Write("Ange produkt id: ");
+                    Console.Write("Ange produkt id: ");  // Välj produkt genom produkt-Id
                     int productId = int.Parse(Console.ReadLine());
 
-                    var removeProduct = productList.Where(p => p.Id == productId).FirstOrDefault();
+                    var removeProduct = myDb.Products.Where(p => p.Id == productId).FirstOrDefault();
 
+                    // Tar bor produkt
                     if (removeProduct != null)
                     {
                         myDb.Products.Remove(removeProduct);
@@ -238,9 +222,7 @@ namespace Webshop
                 Console.ReadLine();
                 Console.Clear();
                 goBack = true;
-
             }
-
         }
 
         public static void AddNewCategory()
@@ -250,22 +232,17 @@ namespace Webshop
             {
                 using (var myDb = new MyDbContext())
                 {
-                    var categories = myDb.Categories.ToList();
-
                     Console.WriteLine("----------------------");
                     Console.WriteLine("Lägg till ny kategori");
                     Console.WriteLine("----------------------");
-
-
-                    foreach (var category in categories)
+                    foreach (var category in myDb.Categories)  // Visar kategorier
                     {
                         Console.WriteLine(category.Name);
-
                     }
-
                     Console.Write("Ange kategorinamn: ");
                     var categoryName = Console.ReadLine();
 
+                    // Skapar ny kategori
                     var newCategory = new Category
                     {
                         Name = categoryName
@@ -287,16 +264,16 @@ namespace Webshop
             {
                 using (var myDb = new MyDbContext())
                 {
-
+                    // Uppdatera kategorier
                     var categories = myDb.Categories;
                     Console.WriteLine("------------------");
                     Console.WriteLine("Uppdatera kategori");
                     Console.WriteLine("------------------");
-                    foreach (var category in categories)
+                    foreach (var category in categories)   // Visar kategorier
                     {
                         Console.WriteLine(category.Id + "." + category.Name);
                     }
-                    Console.Write("Ange kategori id: ");
+                    Console.Write("Ange kategori id: "); 
                     var categoryId = int.Parse(Console.ReadLine());
 
 
@@ -305,9 +282,10 @@ namespace Webshop
                     if (updateCategory != null)
                     {
                         {
-                            Console.WriteLine("Ange nytt namn på kategori(om det inte ska ändras - lämna tomt): ");
+                            // Nytt namn lägs till, lämmnas tomt om man inte vill ändra
+                            Console.WriteLine("Ange nytt namn på kategori(annars-lämna tomt): ");
                             var newName = Console.ReadLine();
-                            if (!string.IsNullOrWhiteSpace(newName))
+                            if (!string.IsNullOrEmpty(newName))
                             {
                                 updateCategory.Name = newName;
                             }
@@ -329,23 +307,23 @@ namespace Webshop
             {
                 using (var myDb = new MyDbContext())
                 {
-
-                    var categories = myDb.Categories;
-
+                    // Ta bort kategori
                     Console.WriteLine("----------------");
                     Console.WriteLine("Ta bort kategori");
                     Console.WriteLine("-----------------");
-                    foreach (var category in categories)
+                    foreach (var category in myDb.Categories) // Visar de kategorier som finns
                     {
                         Console.WriteLine(category.Id + "." + category.Name);
                     }
                     Console.WriteLine("Ange kategori id: ");
                     int categoryId = int.Parse(Console.ReadLine());
 
-                    var removeCategory = categories.Where(c => c.Id == categoryId).FirstOrDefault();
+                    var removeCategory = myDb.Categories.Where(c => c.Id == categoryId).FirstOrDefault();
+
+                    // Kategorin tas bort
                     if (removeCategory != null)
                     {
-                        categories.Remove(removeCategory);
+                        myDb.Categories.Remove(removeCategory);
                         myDb.SaveChanges();
                         Console.WriteLine("Kategori är borttagen..");
                     }
@@ -353,17 +331,11 @@ namespace Webshop
                     {
                         Console.WriteLine("Kategori hittades inte..");
                     }
-
-
-
                 }
             }
             Console.ReadLine();
             Console.Clear();
             goBack = true;
-
-
         }
-
     }
 }
