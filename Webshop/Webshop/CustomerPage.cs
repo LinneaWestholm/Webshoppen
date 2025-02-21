@@ -93,7 +93,7 @@ namespace Webshop
 
                     if (selectedProduct != null)
                     {
-                        Console.WriteLine("Mata in ditt ID: ");
+                        Console.Write("Mata in ditt ID: ");
                         var cartId = int.Parse(Console.ReadLine());
 
                         var cart = myDb.ShoppingCarts
@@ -194,12 +194,40 @@ namespace Webshop
                                 switch (key.KeyChar)
                                 {
                                     case '+':
-                                        var newCart = new ShoppingCart();
-                                        newCart.Products.Add(selectedProduct);
+                                        Console.WriteLine("1: Ny kund? ");
+                                        Console.WriteLine("2. Redan kund?");
+                                        Console.Write("Ditt val: ");
+                                        var choice = Console.ReadLine();
 
-                                        myDb.ShoppingCarts.Add(newCart);
-                                        myDb.SaveChanges();
-                                        Console.WriteLine("Vald produkt las till i varukorgen");
+                                        if(choice == "1")
+                                        {
+                                            var newCart = new ShoppingCart();
+                                            newCart.Products.Add(selectedProduct);
+
+                                            myDb.ShoppingCarts.Add(newCart);
+                                            myDb.SaveChanges();
+                                            Console.WriteLine("Ny kund skapad...");
+                                            Thread.Sleep(1000);
+                                            Console.WriteLine("Vald produkt las till i varukorgen");
+
+                                        }
+                                        else if (choice == "2")
+                                        {
+                                            Console.Write("Mata in ditt ID: ");
+                                            var cartId = int.Parse(Console.ReadLine());
+
+                                            var cart = myDb.ShoppingCarts
+                                                .Include(c => c.Products)
+                                                .FirstOrDefault(c => c.Id == cartId);
+
+                                            if(cart!= null)
+                                            {
+                                                cart.Products.Add(selectedProduct);
+                                                myDb.SaveChanges();
+                                                Console.WriteLine("Vald produkt las till i varukorgen");
+                                            }
+
+                                        }
                                         break;
 
                                     case 'x':
@@ -241,7 +269,7 @@ namespace Webshop
             {
                 using (var myDb = new MyDbContext())
                 {
-                    Console.WriteLine("Mata in ditt ID: ");
+                    Console.Write("Mata in ditt ID: ");
                     var cartId = int.Parse(Console.ReadLine());
 
                     var cart = myDb.ShoppingCarts
