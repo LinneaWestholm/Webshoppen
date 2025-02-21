@@ -9,10 +9,7 @@ namespace Webshop
 {
     internal class Window
     {
-        private string v1;
-        private int v2;
-        private int v3;
-        private List<Product> productText;
+
 
         public string Header { get; set; }
         public int Left { get; set; }
@@ -25,14 +22,6 @@ namespace Webshop
             Left = left;
             Top = top;
             TextRows = textRows;
-        }
-
-        public Window(string v1, int v2, int v3, List<Product> productText)
-        {
-            this.v1 = v1;
-            this.v2 = v2;
-            this.v3 = v3;
-            this.productText = productText;
         }
 
         public void Draw()
@@ -87,4 +76,24 @@ namespace Webshop
         public static int LowestPosition { get; set; }
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
+
+
+
+
+
+
+

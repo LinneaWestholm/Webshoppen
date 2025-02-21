@@ -9,14 +9,17 @@ using System.Threading.Tasks;
 using Webshop.Models;
 using System.ComponentModel.Design;
 
+
 namespace Webshop
 {
     internal class Admin
     {
+
+        public static List<Customer> customers = new List<Customer>(); // Holds customer data in memory
         public static void AdminPage()
         {
             Console.Clear();
-            List<string> adminMenu = new List<string> { "1. Lägg till ny produkt", "2. Uppdatera produkt", "3. Ta bort produkt", "4. Lägg till ny kategori", "5. Uppdatera kategori", "6. Ta bort kategori","7. Visa kunder", "8. Uppdatera kund ", "9. Visa orderhistorik", "0. Se statistik"};
+            List<string> adminMenu = new List<string> { "1. Lägg till ny produkt", "2. Uppdatera produkt", "3. Ta bort produkt", "4. Lägg till ny kategori", "5. Uppdatera kategori", "6. Ta bort kategori"};
             var adminWindow = new Window("Admin", 2, 1, adminMenu);
             adminWindow.Draw();
             List<string> exit = new List<string> { "Avsluta [x]" };
@@ -26,7 +29,7 @@ namespace Webshop
             var choice = Console.ReadKey().KeyChar;
 
             Console.WriteLine();
-            Console.Clear();
+       
 
             while (true)
             {
@@ -50,18 +53,7 @@ namespace Webshop
                     case '6':
                         RemoveCategory();
                         break;
-                    case '7':
-                        ShowCustomers();
-                        break;
-                    case '8':
-                        UpdateCustomer();
-                        break;
-                    case '9':
-                        ShowOrderHistory();
-                        break;
-                    case '0':
-                        ShowStatistics();
-                        break;
+    
                     case 'x':
                         Console.WriteLine("..Hejdå!");
                         return;
@@ -69,7 +61,7 @@ namespace Webshop
                         Console.WriteLine("Ogiltligt val. Välj ett nummer mellan 1-4");
                         break;
                 }
-                Console.WriteLine();
+                Console.ReadLine();
                
                
 
@@ -129,8 +121,7 @@ namespace Webshop
 
                     Console.WriteLine("Ny produkt har lagts till.");
                 }
-                Console.ReadKey();
-                Console.Clear();
+             
 
             }
         }
@@ -352,27 +343,5 @@ namespace Webshop
 
         }
 
-        public static void ShowCustomers()
-        {
-            Customer.GetAllCustomers();
-            Console.Clear();
-            AdminPage();
-
-        }
-
-        public static void UpdateCustomer()
-        {
-
-        }
-
-        public static void ShowOrderHistory()
-        {
-
-        }
-
-        public static void ShowStatistics()
-        {
-
-        }
     }
 }

@@ -8,6 +8,7 @@ namespace Webshop
         static void Main(string[] args)
         {
 
+
             using (var myDb = new MyDbContext())
             {
 
